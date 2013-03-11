@@ -1,0 +1,37 @@
+CROSS_HOST="x86_64-pc-cygwin"
+inherit cross
+
+NAME="cygwin64-pcre"
+VERSION=8.32
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="PCRE libraries for Cygwin 64bit toolchain"
+DESCRIPTION="The PCRE library is a set of functions that implement regular
+expression pattern matching using the same syntax and semantics as Perl,
+with just a few differences."
+HOMEPAGE="http://www.pcre.org/"
+SRC_URI="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${VERSION}.tar.bz2"
+SRC_DIR="pcre-${VERSION}"
+
+NO_AUTOHEADER=1
+CYGCONF_ARGS="
+		--enable-pcre16 \
+		--enable-pcre32 \
+		--enable-newline-is-anycrlf \
+		--enable-unicode-properties --enable-utf8 \
+		--disable-pcregrep-libbz2 \
+		--disable-pcregrep-libz \
+		--disable-pcretest-libreadline \
+		--disable-stack-for-recursion
+"
+MAKEOPTS+=" bin_PROGRAMS= dist_doc_DATA= dist_html_DATA= dist_man_MANS= "
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	# symlinks are created during install-data-hook
+	rm -fr ${D}${CROSS_DATADIR}/man/
+}
+
+KEEP_LA_FILES="none"
